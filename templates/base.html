@@ -20,8 +20,11 @@
   {% block og_image %}{% if site.logo %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ site.logo.url }}">{% endif %}{% endblock %}
   <meta name="twitter:card" content="summary_large_image">
 
-  <link rel="icon" href="{% static 'img/favicon.svg' %}" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="{% static 'img/favicon.svg' %}">
+  {# Generated from static/img/logo.jpeg — the real SVU crest. #}
+  <link rel="icon" href="{% static 'img/favicon.ico' %}" sizes="16x16 32x32 48x48">
+  <link rel="icon" href="{% static 'img/favicon-32.png' %}" type="image/png" sizes="32x32">
+  <link rel="icon" href="{% static 'img/favicon-192.png' %}" type="image/png" sizes="192x192">
+  <link rel="apple-touch-icon" href="{% static 'img/apple-touch-icon.png' %}">
 
   <link rel="preload" as="style" href="{% static 'css/main.css' %}">
   <link rel="stylesheet" href="{% static 'css/main.css' %}">
