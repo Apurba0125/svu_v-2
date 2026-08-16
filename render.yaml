@@ -47,9 +47,12 @@ services:
       - key: DJANGO_HSTS_SECONDS
         value: "31536000"
 
-      # CHANGE THIS to your own unguessable path before going live.
+      # Prompted for, never committed: a path hardcoded here would be public in
+      # the repo, and because the Blueprint auto-syncs it would also overwrite
+      # any override set in the dashboard. Must end with a trailing slash.
+      # e.g. staff-portal-7yq2mk/
       - key: DJANGO_ADMIN_URL
-        value: "manage-svu-a91f/"
+        sync: false
 
       # No nginx in front on a single service, so the app serves /media/ itself.
       - key: DJANGO_SERVE_MEDIA
