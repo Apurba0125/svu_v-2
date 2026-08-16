@@ -61,6 +61,14 @@ if RENDER_HOSTNAME:
     _render_origin = f"https://{RENDER_HOSTNAME}"
     if _render_origin not in CSRF_TRUSTED_ORIGINS:
         CSRF_TRUSTED_ORIGINS.append(_render_origin)
+elif env_bool("RENDER", False) or env("RENDER_SERVICE_ID"):
+    # We are on Render but the hostname is not exposed — this is the case during
+    # the *build* step (collectstatic / migrate / seed), which serves no HTTP
+    # traffic at all. Without this, the strict ALLOWED_HOSTS guard in prod.py
+    # would abort the build before the app ever starts.
+    # The wildcard is only a build-time stand-in: at runtime the block above
+    # pins ALLOWED_HOSTS to the exact hostname.
+    ALLOWED_HOSTS.append(".onrender.com")
 
 # Obscured admin mount point. Overridable per-environment.
 ADMIN_URL = env("DJANGO_ADMIN_URL", "manage-svu-a91f/")

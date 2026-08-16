@@ -182,6 +182,11 @@ Postgres database together and wires `DATABASE_URL` automatically.
 automatically, so the `.onrender.com` URL works before you attach a domain. Add
 your real domain to `DJANGO_ALLOWED_HOSTS` when you do.
 
+Render only exposes that hostname **at runtime**, not during the build, so when
+`RENDER` is set without it the settings fall back to a `.onrender.com` wildcard.
+That is build-time only — the build serves no HTTP traffic — and at runtime
+`ALLOWED_HOSTS` is pinned to the exact hostname.
+
 ### Free-tier caveats
 
 | Limit | Effect | Fix |
@@ -209,7 +214,7 @@ failures are a missing environment variable, not a code fault.
 |---|---|---|
 | `DJANGO_SECRET_KEY is not set` | The prompt was left blank. Blueprint `sync: false` values are **never** auto-filled | Dashboard ▸ service ▸ **Environment** ▸ add `DJANGO_SECRET_KEY` ▸ Save |
 | `DJANGO_SECRET_KEY is only N characters long` | Value shorter than 50 chars | Regenerate with `python manage.py generate_secret_key` (70 chars) |
-| `DJANGO_ALLOWED_HOSTS must list the real public hostnames` | `RENDER_EXTERNAL_HOSTNAME` missing | Set `DJANGO_ALLOWED_HOSTS` explicitly, comma-separated |
+| `DJANGO_ALLOWED_HOSTS must list the real public hostnames` | Not on Render, and the hostnames were never set | Set `DJANGO_ALLOWED_HOSTS` explicitly, comma-separated |
 | `Refusing to expose the Django admin at 'admin/'` | `DJANGO_ADMIN_URL` set to `admin/` | Use an unguessable path **ending in `/`** |
 | Admin URLs 404 after a successful deploy | `DJANGO_ADMIN_URL` missing its trailing slash | `staff-portal-7yq2mk/`, not `staff-portal-7yq2mk` |
 
