@@ -187,7 +187,7 @@ your real domain to `DJANGO_ALLOWED_HOSTS` when you do.
 | Limit | Effect | Fix |
 |---|---|---|
 | Ephemeral filesystem | Uploaded media is **lost on every deploy** | Attach a Render Disk, or move media to S3/Cloudinary |
-| Free Postgres expires after 90 days | Database is deleted | Upgrade the database plan |
+| Free Postgres is time-limited | Database is deleted when it expires — check the current window on Render's pricing page | Upgrade the database plan |
 | Service sleeps after 15 min idle | ~30 s cold start | Upgrade the service plan |
 | `LocMemCache` is per-process | Rate limits apply per worker, not globally | Add Redis and set `REDIS_URL` |
 

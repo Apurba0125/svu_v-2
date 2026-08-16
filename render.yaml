@@ -9,7 +9,7 @@ databases:
   - name: svu-db
     databaseName: svu
     user: svu
-    plan: free          # free Postgres expires after 90 days — upgrade for production
+    plan: free          # free Postgres is time-limited by Render — upgrade for production
 
 services:
   - type: web
