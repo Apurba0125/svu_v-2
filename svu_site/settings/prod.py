@@ -14,15 +14,36 @@ DEBUG = False
 
 # 50 chars matches Django's own security.W009 threshold, so `check --deploy`
 # stays clean. `manage.py generate_secret_key` emits a 70-character value.
+#
+# The message below is deliberately verbose: this check fires during a PaaS
+# build, where the only context the operator gets is the traceback.
 if not SECRET_KEY or len(SECRET_KEY) < 50 or SECRET_KEY.startswith("dev-only"):
+    if not SECRET_KEY:
+        _problem = "DJANGO_SECRET_KEY is not set."
+    elif SECRET_KEY.startswith("dev-only"):
+        _problem = "DJANGO_SECRET_KEY is still the development placeholder."
+    else:
+        _problem = (
+            f"DJANGO_SECRET_KEY is only {len(SECRET_KEY)} characters long; "
+            "50 or more are required."
+        )
     raise ImproperlyConfigured(
-        "DJANGO_SECRET_KEY must be set to a unique random string of at least "
-        "50 characters. Generate one with: python manage.py generate_secret_key"
+        f"{_problem}\n"
+        "\n"
+        "  Generate a value:  python manage.py generate_secret_key\n"
+        "\n"
+        "  Render  -> Dashboard > your web service > Environment >\n"
+        "             add/edit DJANGO_SECRET_KEY > Save changes (redeploys).\n"
+        "             Blueprint 'sync: false' vars are NOT filled in for you;\n"
+        "             an empty box at deploy time lands here.\n"
+        "  Local   -> add the value to your .env file.\n"
     )
 
 if not ALLOWED_HOSTS or ALLOWED_HOSTS == ["localhost", "127.0.0.1"]:
     raise ImproperlyConfigured(
-        "DJANGO_ALLOWED_HOSTS must list the real public hostnames in production."
+        "DJANGO_ALLOWED_HOSTS must list the real public hostnames in production.\n"
+        "On Render this is normally automatic via RENDER_EXTERNAL_HOSTNAME; if you\n"
+        "see this, set DJANGO_ALLOWED_HOSTS explicitly (comma-separated hostnames)."
     )
 
 if env("DJANGO_ADMIN_URL", "manage-svu-a91f/") == "admin/":
