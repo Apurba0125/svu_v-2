@@ -1,0 +1,8 @@
+{% extends "errors/base_error.html" %}
+{% block title %}Access denied (403) — {{ site.site_name }}{% endblock %}
+{% block error_code %}403{% endblock %}
+{% block error_title %}ACCESS DENIED{% endblock %}
+{% block error_body %}
+  You do not have permission to view this page. If you believe this is a mistake,
+  please contact the university helpdesk.
+{% endblock %}

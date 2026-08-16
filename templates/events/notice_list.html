@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Notice Board — {{ site.site_name }}{% endblock %}
+{% block meta_description %}Official notices, circulars and announcements from {{ site.site_name }}.{% endblock %}
+
+{% block content %}
+  {% include "includes/page_hero.html" with hero_title="Notice Board" hero_subtitle="Official notices and circulars" %}
+
+  <section class="section">
+    <div class="shell">
+      <div class="card">
+        <ul class="notice-board__list" role="list">
+          {% for notice in page_obj %}
+            <li class="notice-item {% if notice.is_important %}is-important{% endif %}">
+              <span class="notice-item__date">{{ notice.notice_date|date:"d M Y" }}</span>
+              <a class="notice-item__title" href="{{ notice.target_url }}"
+                 {% if notice.attachment %}target="_blank" rel="noopener noreferrer"{% endif %}>
+                {{ notice.title }}
+                {% if notice.attachment %}
+                  <svg aria-hidden="true" focusable="false" width="13" height="13"><use href="#i-file"></use></svg>
+                {% endif %}
+                {% if notice.is_important %}<span class="notice-item__flag">Important</span>{% endif %}
+              </a>
+              {% if notice.summary %}<p><small>{{ notice.summary|striptags|truncatechars:180 }}</small></p>{% endif %}
+            </li>
+          {% empty %}
+            <li class="empty-state"><p>No notices published yet.</p></li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      {% include "includes/pagination.html" with page_obj=page_obj %}
+    </div>
+  </section>
+{% endblock %}

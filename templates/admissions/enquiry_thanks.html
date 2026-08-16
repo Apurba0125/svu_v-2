@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Thank you — {{ site.site_name }}{% endblock %}
+{% block robots %}noindex, nofollow{% endblock %}
+
+{% block content %}
+  <section class="section">
+    <div class="shell">
+      <div class="card" role="status">
+        <h1 class="section-title section-title--underline">
+          <span class="h-dark">THANK</span> <span class="h-accent">YOU</span>
+        </h1>
+        <p>Your enquiry has been received. Our admission team will contact you shortly
+          on the number you provided.</p>
+        <p>
+          <a class="btn btn--gold" href="{% url 'core:home' %}">Back to home</a>
+          <a class="btn btn--outline-gold" href="{% url 'academics:course_list' %}">Browse courses</a>
+        </p>
+      </div>
+    </div>
+  </section>
+{% endblock %}

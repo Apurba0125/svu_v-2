@@ -1,0 +1,9 @@
+{% extends "errors/base_error.html" %}
+{% block title %}Security check failed — {{ site.site_name }}{% endblock %}
+{% block error_code %}403{% endblock %}
+{% block error_title %}SECURITY CHECK FAILED{% endblock %}
+{% block error_body %}
+  Your session could not be verified — this usually happens when a page has been
+  left open for a long time or cookies are disabled. Please reload the page and
+  submit the form again.
+{% endblock %}

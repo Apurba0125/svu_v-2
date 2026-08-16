@@ -1,0 +1,21 @@
+{% comment %}
+Inner-page banner.
+  hero_title / hero_subtitle / hero_image / crumbs (list of {label,url})
+{% endcomment %}
+<section class="page-hero">
+  {% if hero_image %}
+    <img class="page-hero__bg" src="{{ hero_image }}" alt="" aria-hidden="true" loading="lazy">
+  {% endif %}
+  <div class="shell page-hero__inner">
+    <h1 class="page-hero__title">{{ hero_title }}</h1>
+    {% if hero_subtitle %}<p class="page-hero__subtitle">{{ hero_subtitle }}</p>{% endif %}
+    <nav aria-label="Breadcrumb">
+      <ol class="breadcrumbs">
+        <li><a href="{% url 'core:home' %}">Home</a></li>
+        {% for crumb in crumbs %}
+          <li>{% if crumb.url %}<a href="{{ crumb.url }}">{{ crumb.label }}</a>{% else %}{{ crumb.label }}{% endif %}</li>
+        {% endfor %}
+      </ol>
+    </nav>
+  </div>
+</section>

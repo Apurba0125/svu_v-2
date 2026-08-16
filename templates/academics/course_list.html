@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load svu_extras %}
+
+{% block title %}Courses &amp; Programmes — {{ site.site_name }}{% endblock %}
+{% block meta_description %}Browse all UG, PG and Ph.D programmes offered at {{ site.site_name }}.{% endblock %}
+
+{% block content %}
+  {% include "includes/page_hero.html" with hero_title="Schools & Courses" hero_subtitle="UG, PG and Ph.D programmes across every discipline" %}
+
+  <section class="section">
+    <div class="shell">
+
+      <div class="chip-row" role="group" aria-label="Filter by programme level">
+        <a class="chip {% if not selected_program %}is-active{% endif %}"
+           href="{% query_string request programme='' page='' %}">All levels</a>
+        {% for program in programs %}
+          <a class="chip {% if selected_program == program.slug %}is-active{% endif %}"
+             href="{% query_string request programme=program.slug page='' %}">{{ program.name }}</a>
+        {% endfor %}
+      </div>
+
+      <div class="chip-row" role="group" aria-label="Filter by school">
+        <a class="chip {% if not selected_school %}is-active{% endif %}"
+           href="{% query_string request school='' page='' %}">All schools</a>
+        {% for school in schools %}
+          <a class="chip {% if selected_school == school.slug %}is-active{% endif %}"
+             href="{% query_string request school=school.slug page='' %}">{{ school.name|truncatechars:34 }}</a>
+        {% endfor %}
+      </div>
+
+      <p><strong>{{ total }}</strong> course{{ total|pluralize }} found</p>
+
+      <div class="auto-grid">
+        {% for course in page_obj %}
+          <article class="card">
+            <h2 class="school-card__title">{{ course.name }}</h2>
+            <ul class="meta-list" role="list">
+              <li><span class="k">Level</span> <span>{{ course.program.name }}</span></li>
+              <li><span class="k">School</span> <span>{{ course.school.name }}</span></li>
+              {% if course.duration %}<li><span class="k">Duration</span> <span>{{ course.duration }}</span></li>{% endif %}
+            </ul>
+            <p class="section--tight">
+              <a class="btn btn--outline-gold btn--sm" href="{{ course.get_absolute_url }}">View Details</a>
+            </p>
+          </article>
+        {% empty %}
+          <div class="empty-state">
+            <svg aria-hidden="true"><use href="#i-book"></use></svg>
+            <p>No courses match these filters.</p>
+          </div>
+        {% endfor %}
+      </div>
+
+      {% include "includes/pagination.html" with page_obj=page_obj %}
+    </div>
+  </section>
+{% endblock %}

@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% load svu_extras %}
+
+{% block title %}Contact Us — {{ site.site_name }}{% endblock %}
+{% block meta_description %}Get in touch with {{ site.site_name }}, {{ site.address_line2 }}. Admission helpline, e-mail and campus address.{% endblock %}
+
+{% block content %}
+  {% include "includes/page_hero.html" with hero_title="Contact Us" hero_subtitle="We would love to hear from you" %}
+
+  <section class="section">
+    <div class="shell content-grid">
+
+      <div class="card">
+        <h2 class="section-title section-title--underline">
+          <span class="h-dark">SEND US A</span> <span class="h-accent">MESSAGE</span>
+        </h2>
+
+        <form method="post" novalidate>
+          {% csrf_token %}
+
+          {% if form.non_field_errors %}
+            <div class="alert alert--error" role="alert">
+              {% for error in form.non_field_errors %}<div>{{ error }}</div>{% endfor %}
+            </div>
+          {% endif %}
+
+          <div class="hp-field" aria-hidden="true">
+            <label for="{{ form.website.id_for_label }}">Leave this field empty</label>
+            {{ form.website }}
+          </div>
+          {{ form.form_ts }}
+
+          <div class="form-row">
+            <div class="form-field {% if form.name.errors %}has-error{% endif %}">
+              <label for="{{ form.name.id_for_label }}">Name *</label>
+              {{ form.name }}
+              {% for e in form.name.errors %}<span class="field-error">{{ e }}</span>{% endfor %}
+            </div>
+            <div class="form-field {% if form.email.errors %}has-error{% endif %}">
+              <label for="{{ form.email.id_for_label }}">Email *</label>
+              {{ form.email }}
+              {% for e in form.email.errors %}<span class="field-error">{{ e }}</span>{% endfor %}
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-field {% if form.phone.errors %}has-error{% endif %}">
+              <label for="{{ form.phone.id_for_label }}">Mobile</label>
+              {{ form.phone }}
+              {% for e in form.phone.errors %}<span class="field-error">{{ e }}</span>{% endfor %}
+            </div>
+            <div class="form-field {% if form.subject.errors %}has-error{% endif %}">
+              <label for="{{ form.subject.id_for_label }}">Subject *</label>
+              {{ form.subject }}
+              {% for e in form.subject.errors %}<span class="field-error">{{ e }}</span>{% endfor %}
+            </div>
+          </div>
+
+          <div class="form-field {% if form.message.errors %}has-error{% endif %}">
+            <label for="{{ form.message.id_for_label }}">Message *</label>
+            {{ form.message }}
+            {% for e in form.message.errors %}<span class="field-error">{{ e }}</span>{% endfor %}
+          </div>
+
+          <div class="form-field {% if form.captcha.errors %}has-error{% endif %}">
+            <label for="{{ form.captcha.id_for_label }}">Enter the captcha *</label>
+            <div class="captcha-row">
+              <div class="captcha-box">
+                <img class="captcha-image" src="{{ form.captcha_image }}"
+                     alt="Captcha challenge — type the characters shown into the next box"
+                     width="140" height="34">
+                <button class="captcha-refresh" type="button"
+                        data-endpoint="{% url 'core:captcha_refresh' %}"
+                        aria-label="Get a new captcha image">
+                  <svg aria-hidden="true" focusable="false"><use href="#i-refresh"></use></svg>
+                </button>
+              </div>
+              <div>{{ form.captcha }}</div>
+            </div>
+            {% for e in form.captcha.errors %}<span class="field-error">{{ e }}</span>{% endfor %}
+          </div>
+
+          <button class="btn btn--gold" type="submit">Send message</button>
+        </form>
+      </div>
+
+      <aside class="card">
+        <h2 class="section-title section-title--underline">
+          <span class="h-dark">REACH</span> <span class="h-accent">US</span>
+        </h2>
+        <ul class="footer__contact" role="list">
+          <li>
+            <svg aria-hidden="true" focusable="false" width="15" height="15"><use href="#i-pin"></use></svg>
+            <span>{{ site.address_line1 }},<br>{{ site.address_line2 }}</span>
+          </li>
+          {% for phone in site.phone_list %}
+            <li>
+              <svg aria-hidden="true" focusable="false" width="15" height="15"><use href="#i-phone"></use></svg>
+              <a href="{{ phone|tel_href }}">{{ phone }}</a>
+            </li>
+          {% endfor %}
+          {% if site.toll_free %}
+            <li>
+              <svg aria-hidden="true" focusable="false" width="15" height="15"><use href="#i-clock"></use></svg>
+              <span><a href="{{ site.toll_free|tel_href }}">{{ site.toll_free }}</a> (Toll Free) {{ site.toll_free_hours }}</span>
+            </li>
+          {% endif %}
+          <li>
+            <svg aria-hidden="true" focusable="false" width="15" height="15"><use href="#i-mail"></use></svg>
+            <a href="mailto:{{ site.email }}">{{ site.email }}</a>
+          </li>
+        </ul>
+      </aside>
+
+    </div>
+  </section>
+{% endblock %}

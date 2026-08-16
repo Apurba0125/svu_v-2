@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Apply Online — {{ site.site_name }}{% endblock %}
+{% block robots %}noindex, follow{% endblock %}
+
+{% block content %}
+  {% include "includes/page_hero.html" with hero_title="Apply Online" hero_subtitle="Join SVU by applying online and pursue your desired course" %}
+
+  <section class="section">
+    <div class="shell">
+      <div class="panel">
+        <h2 class="panel__head">Enquiry Form</h2>
+        <div class="panel__body">
+          {% if enquiry_form.errors %}
+            <div class="alert alert--error" role="alert">
+              Please correct the highlighted fields and submit again.
+            </div>
+          {% endif %}
+          {% include "includes/enquiry_form.html" with form=enquiry_form ajax=1 %}
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

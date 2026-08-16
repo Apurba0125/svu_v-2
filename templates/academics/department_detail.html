@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load svu_extras %}
+
+{% block title %}{{ department.name }} — {{ department.school.name }}{% endblock %}
+
+{% block content %}
+  {% include "includes/page_hero.html" with hero_title=department.name hero_subtitle=department.school.name hero_image=department.image|file_url %}
+
+  <section class="section">
+    <div class="shell content-grid">
+      <div>
+        {% if department.description %}
+          <article class="card prose">{{ department.description|richtext }}</article>
+        {% endif %}
+
+        {% if courses %}
+          <h2 class="section-title section-title--underline">
+            <span class="h-dark">COURSES</span> <span class="h-accent">IN THIS DEPARTMENT</span>
+          </h2>
+          <div class="auto-grid">
+            {% for course in courses %}
+              <a class="card" href="{{ course.get_absolute_url }}">
+                <strong>{{ course.name }}</strong>
+                <div><small>{{ course.program.name }}</small></div>
+              </a>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <aside class="card">
+        <h2 class="section-title section-title--underline"><span class="h-dark">AT A GLANCE</span></h2>
+        <ul class="meta-list" role="list">
+          <li><span class="k">School</span> <a href="{{ department.school.get_absolute_url }}">{{ department.school.name }}</a></li>
+          {% if department.head_name %}
+            <li><span class="k">Head</span> <span>{{ department.head_name }}{% if department.head_designation %}, {{ department.head_designation }}{% endif %}</span></li>
+          {% endif %}
+        </ul>
+      </aside>
+    </div>
+  </section>
+{% endblock %}

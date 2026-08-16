@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Industry Partners — {{ site.site_name }}{% endblock %}
+
+{% block content %}
+  {% include "includes/page_hero.html" with hero_title="Industry Partners" hero_subtitle="Building a strong pipeline of industry-ready talent" %}
+
+  <section class="section">
+    <div class="shell auto-grid">
+      {% for partner in partners %}
+        <div class="card">
+          <div class="enlist-card__media">
+            {% if partner.logo %}
+              <img src="{{ partner.logo.url }}" alt="{{ partner.name }}" loading="lazy" width="240" height="160">
+            {% else %}
+              <strong>{{ partner.name }}</strong>
+            {% endif %}
+          </div>
+          <p class="enlist-card__title">
+            {% if partner.url %}
+              <a href="{{ partner.url }}" target="_blank" rel="noopener noreferrer">{{ partner.name }}</a>
+            {% else %}{{ partner.name }}{% endif %}
+          </p>
+        </div>
+      {% empty %}
+        <div class="empty-state"><p>Partner details are being updated.</p></div>
+      {% endfor %}
+    </div>
+  </section>
+{% endblock %}

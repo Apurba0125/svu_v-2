@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Events — {{ site.site_name }}{% endblock %}
+{% block meta_description %}Campus events, seminars, cultural programmes and news from {{ site.site_name }}.{% endblock %}
+
+{% block content %}
+  {% include "includes/page_hero.html" with hero_title="Latest Events" hero_subtitle="What is happening on campus" %}
+
+  <section class="section">
+    <div class="shell">
+      <div class="auto-grid">
+        {% for event in page_obj %}
+          <article class="event-card">
+            <div class="event-card__media">
+              <img src="{% if event.cover_image %}{{ event.cover_image.url }}{% else %}{% static 'img/event-placeholder.svg' %}{% endif %}"
+                   alt="{{ event.alt_text }}" loading="lazy" width="600" height="450">
+            </div>
+            <div class="event-card__body">
+              <span class="event-card__date">{{ event.event_date|date:"d M Y" }}</span>
+              <h2 class="event-card__title">{{ event.title|truncatechars:120 }}</h2>
+              <div class="event-card__footer">
+                <a class="btn btn--outline-gold btn--sm" href="{{ event.get_absolute_url }}">View Details</a>
+              </div>
+            </div>
+          </article>
+        {% empty %}
+          <div class="empty-state">
+            <svg aria-hidden="true"><use href="#i-calendar"></use></svg>
+            <p>No events have been published yet.</p>
+          </div>
+        {% endfor %}
+      </div>
+
+      {% include "includes/pagination.html" with page_obj=page_obj %}
+    </div>
+  </section>
+{% endblock %}

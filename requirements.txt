@@ -1,0 +1,15 @@
+# ---------------------------------------------------------------------------
+# Swami Vivekananda University - website requirements
+# ---------------------------------------------------------------------------
+Django==4.2.7
+Pillow>=10.0                # image processing + CAPTCHA rendering + upload validation
+whitenoise>=6.5             # hashed/compressed static file serving
+bleach>=4.0                 # HTML sanitisation for rich-text admin fields
+
+# --- Production server & database ------------------------------------------
+gunicorn>=21.2              # WSGI server (Render / any Linux host)
+psycopg2-binary>=2.9        # PostgreSQL driver (Render Postgres via DATABASE_URL)
+
+# --- Optional ---------------------------------------------------------------
+# redis>=5.0                 # shared cache for rate limiting / login lockouts
+# waitress>=2.1              # WSGI server on Windows

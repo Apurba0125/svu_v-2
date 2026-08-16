@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load svu_extras %}
+
+{% block title %}Frequently Asked Questions — {{ site.site_name }}{% endblock %}
+{% block meta_description %}Answers to common questions about admission, fees, hostel, scholarships and campus life at {{ site.site_name }}.{% endblock %}
+
+{% block content %}
+  {% include "includes/page_hero.html" with hero_title="Frequently Asked Questions" hero_subtitle="Everything students ask us most often" %}
+
+  <section class="section">
+    <div class="shell">
+      {% for category, items in grouped_faqs.items %}
+        <h2 class="section-title section-title--underline">
+          <span class="h-dark">{{ category|upper }}</span>
+        </h2>
+
+        {% for faq in items %}
+          <div class="faq-item">
+            <button class="faq-item__q" type="button"
+                    aria-expanded="false" aria-controls="faq-answer-{{ faq.pk }}">
+              {{ faq.question }}
+            </button>
+            <div class="faq-item__a" id="faq-answer-{{ faq.pk }}" hidden>
+              {{ faq.answer|richtext }}
+            </div>
+          </div>
+        {% endfor %}
+      {% empty %}
+        <div class="empty-state">
+          <svg aria-hidden="true"><use href="#i-inbox"></use></svg>
+          <p>No questions have been published yet.</p>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+{% endblock %}

@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% load svu_extras %}
+
+{% block title %}{{ school.name }} — {{ site.site_name }}{% endblock %}
+
+{% block content %}
+  {% include "includes/page_hero.html" with hero_title=school.name hero_subtitle=school.short_description hero_image=school.banner_image|file_url %}
+
+  <section class="section">
+    <div class="shell content-grid">
+      <div>
+        {% if school.description %}
+          <article class="card prose">{{ school.description|richtext }}</article>
+        {% endif %}
+
+        <h2 class="section-title section-title--underline">
+          <span class="h-dark">COURSES</span> <span class="h-accent">OFFERED</span>
+        </h2>
+
+        <div class="auto-grid">
+          {% for course in courses %}
+            <a class="card" href="{{ course.get_absolute_url }}">
+              <strong>{{ course.name }}</strong>
+              <div><small>{{ course.program.name }}{% if course.duration %} &middot; {{ course.duration }}{% endif %}</small></div>
+            </a>
+          {% empty %}
+            <div class="empty-state"><p>Course details are being updated.</p></div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <aside>
+        {% if school.departments.all %}
+          <div class="card">
+            <h2 class="section-title section-title--underline">
+              <span class="h-dark">DEPARTMENTS</span>
+            </h2>
+            <ul class="meta-list" role="list">
+              {% for department in school.departments.all %}
+                <li><a href="{{ department.get_absolute_url }}">{{ department.name }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+
+        <div class="card section--tight">
+          <p><strong>Interested in this school?</strong></p>
+          <a class="btn btn--gold btn--block" href="{% url 'admissions:enquiry_page' %}">Enquire now</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+{% endblock %}

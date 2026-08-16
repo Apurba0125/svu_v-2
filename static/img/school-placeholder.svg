@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 394" role="img" aria-label="School">
+  <rect width="700" height="394" fill="#1f6b5c"/>
+  <g fill="none" stroke="rgba(255,255,255,.16)" stroke-width="2">
+    <path d="M40 60h120M40 90h80M540 300h120M560 330h100"/>
+    <circle cx="620" cy="80" r="26"/><circle cx="90" cy="320" r="20"/>
+    <path d="M180 340l30-40 30 40zM470 70l24-34 24 34z"/>
+  </g>
+  <text x="350" y="190" font-family="Georgia, serif" font-size="30" font-style="italic"
+        text-anchor="middle" fill="#ffffff">School of</text>
+  <text x="350" y="232" font-family="Georgia, serif" font-size="30" font-style="italic"
+        text-anchor="middle" fill="#ffffff">Swami Vivekananda University</text>
+</svg>

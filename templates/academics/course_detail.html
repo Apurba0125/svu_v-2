@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load svu_extras %}
+
+{% block title %}{{ course.name }} — {{ site.site_name }}{% endblock %}
+{% block meta_description %}{{ course.name }} at {{ site.site_name }}: {{ course.program.name }} programme{% if course.duration %}, {{ course.duration }}{% endif %}. Eligibility, curriculum and admission details.{% endblock %}
+
+{% block content %}
+  {% include "includes/page_hero.html" with hero_title=course.name hero_subtitle=course.school.name %}
+
+  <section class="section">
+    <div class="shell content-grid">
+      <div>
+        {% if course.description %}
+          <article class="card prose">{{ course.description|richtext }}</article>
+        {% endif %}
+
+        {% if course.eligibility %}
+          <h2 class="section-title section-title--underline">
+            <span class="h-dark">ELIGIBILITY</span>
+          </h2>
+          <article class="card prose">{{ course.eligibility|richtext }}</article>
+        {% endif %}
+
+        {% if related_courses %}
+          <h2 class="section-title section-title--underline">
+            <span class="h-dark">RELATED</span> <span class="h-accent">COURSES</span>
+          </h2>
+          <div class="auto-grid">
+            {% for other in related_courses %}
+              <a class="card" href="{{ other.get_absolute_url }}">
+                <strong>{{ other.name }}</strong>
+                <div><small>{{ other.program.name }}</small></div>
+              </a>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <aside>
+        <div class="card">
+          <h2 class="section-title section-title--underline"><span class="h-dark">AT A GLANCE</span></h2>
+          <ul class="meta-list" role="list">
+            <li><span class="k">Level</span> <span>{{ course.program.name }}</span></li>
+            <li><span class="k">School</span> <a href="{{ course.school.get_absolute_url }}">{{ course.school.name }}</a></li>
+            {% if course.department %}
+              <li><span class="k">Department</span> <a href="{{ course.department.get_absolute_url }}">{{ course.department.name }}</a></li>
+            {% endif %}
+            {% if course.duration %}<li><span class="k">Duration</span> <span>{{ course.duration }}</span></li>{% endif %}
+            {% if course.total_seats %}<li><span class="k">Seats</span> <span>{{ course.total_seats }}</span></li>{% endif %}
+          </ul>
+        </div>
+
+        <div class="card section--tight">
+          <p><strong>Ready to apply?</strong></p>
+          <a class="btn btn--gold btn--block" href="{% url 'admissions:enquiry_page' %}">Enquire about this course</a>
+        </div>
+      </aside>
+    </div>
+  </section>
+{% endblock %}

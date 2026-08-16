@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load svu_extras %}
+
+{% block title %}SVU Facilities — {{ site.site_name }}{% endblock %}
+
+{% block content %}
+  {% include "includes/page_hero.html" with hero_title="SVU Facilities" hero_subtitle="Best-in-class infrastructure on campus" %}
+
+  <section class="section">
+    <div class="shell auto-grid">
+      {% for facility in facilities %}
+        <article class="school-card">
+          {% if facility.image %}
+            <div class="school-card__media">
+              <img src="{{ facility.image.url }}" alt="{{ facility.title }}" loading="lazy" width="700" height="394">
+            </div>
+          {% endif %}
+          <div class="school-card__body">
+            <h2 class="school-card__title">{{ facility.title }}</h2>
+            <div class="prose">{{ facility.description|richtext }}</div>
+          </div>
+        </article>
+      {% empty %}
+        <div class="empty-state"><p>Facility details are being updated.</p></div>
+      {% endfor %}
+    </div>
+  </section>
+{% endblock %}

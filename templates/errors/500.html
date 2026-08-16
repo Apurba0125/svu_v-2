@@ -1,0 +1,32 @@
+{% load static %}<!DOCTYPE html>
+{% comment %}
+Deliberately standalone: a 500 can be caused by the database being unavailable,
+in which case rendering base.html (which runs DB-backed context processors)
+would raise a second exception. This page touches nothing but static files.
+{% endcomment %}
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Server error (500)</title>
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+<body>
+  <main id="main-content">
+    <section class="section">
+      <div class="shell">
+        <div class="card" role="alert">
+          <h1 class="section-title section-title--underline">
+            <span class="h-dark">500</span> <span class="h-accent">SOMETHING WENT WRONG</span>
+          </h1>
+          <p>We hit an unexpected problem while loading this page. Our team has been
+             notified and is looking into it.</p>
+          <p>Please try again in a few minutes.</p>
+          <p><a class="btn btn--gold" href="/">Back to home</a></p>
+        </div>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

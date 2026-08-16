@@ -1,0 +1,9 @@
+{% extends "errors/base_error.html" %}
+{% block title %}Page not found (404) — {{ site.site_name }}{% endblock %}
+{% block error_code %}404{% endblock %}
+{% block error_title %}PAGE NOT FOUND{% endblock %}
+{% block error_body %}
+  The page you asked for does not exist or has been moved. Try the
+  <a href="{% url 'core:search' %}">site search</a>, or browse
+  <a href="{% url 'academics:course_list' %}">our courses</a>.
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% load svu_extras %}
+
+{% block title %}Admission {{ site.admission_banner_text }} — {{ site.site_name }}{% endblock %}
+{% block meta_description %}Admissions open at {{ site.site_name }}. Apply online for UG, PG and Ph.D programmes. Scholarships up to 100%.{% endblock %}
+
+{% block content %}
+  {% include "includes/page_hero.html" with hero_title="Admission" hero_subtitle=site.admission_banner_text %}
+
+  <section class="section">
+    <div class="shell content-grid">
+      <div>
+        {% if steps %}
+          <h2 class="section-title section-title--underline">
+            <span class="h-dark">HOW TO</span> <span class="h-accent">APPLY</span>
+          </h2>
+          <div class="offerings__panel card">
+            {% for step in steps %}
+              <div class="offering">
+                <span class="offering__num" aria-hidden="true">{{ forloop.counter|stringformat:"02d" }}</span>
+                <h3 class="offering__title">{{ step.title }}</h3>
+                <p class="offering__text">{{ step.description }}</p>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% if scholarships %}
+          <h2 class="section-title section-title--underline">
+            <span class="h-dark">SCHOLARSHIPS</span>
+          </h2>
+          <div class="auto-grid">
+            {% for scholarship in scholarships %}
+              <article class="card">
+                <h3 class="school-card__title">{{ scholarship.title }}</h3>
+                {% if scholarship.percentage %}
+                  <p><strong>{{ scholarship.percentage }}</strong></p>
+                {% endif %}
+                <p>{{ scholarship.description }}</p>
+              </article>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </div>
+
+      <aside class="panel">
+        <h2 class="panel__head">Enquiry Form</h2>
+        <div class="panel__body">
+          {% include "includes/enquiry_form.html" with form=enquiry_form ajax=1 %}
+        </div>
+      </aside>
+    </div>
+  </section>
+{% endblock %}

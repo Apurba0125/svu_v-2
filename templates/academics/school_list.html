@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}SVU Schools — {{ site.site_name }}{% endblock %}
+{% block meta_description %}Explore the schools of {{ site.site_name }} — engineering, management, law, media, design, nursing, humanities and science.{% endblock %}
+
+{% block content %}
+  {% include "includes/page_hero.html" with hero_title="SVU Schools" hero_subtitle="Multi-disciplinary schools built around industry-ready learning" %}
+
+  <section class="section">
+    <div class="shell auto-grid">
+      {% for school in schools %}
+        <article class="school-card">
+          <div class="school-card__media">
+            <img src="{% if school.card_image %}{{ school.card_image.url }}{% else %}{% static 'img/school-placeholder.svg' %}{% endif %}"
+                 alt="{{ school.name }}" loading="lazy" width="700" height="394">
+          </div>
+          <div class="school-card__body">
+            <h2 class="school-card__title">{{ school.name }}</h2>
+            {% if school.short_description %}
+              <p class="school-card__desc">{{ school.short_description|truncatechars:130 }}</p>
+            {% endif %}
+            <p class="school-card__desc"><strong>{{ school.course_count }}</strong> course{{ school.course_count|pluralize }}</p>
+            <div class="school-card__footer">
+              <a class="btn btn--outline-gold btn--sm" href="{{ school.get_absolute_url }}">View Details</a>
+            </div>
+          </div>
+        </article>
+      {% empty %}
+        <div class="empty-state">
+          <svg aria-hidden="true"><use href="#i-book"></use></svg>
+          <p>Schools will be published here shortly.</p>
+        </div>
+      {% endfor %}
+    </div>
+  </section>
+{% endblock %}

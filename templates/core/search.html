@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% load svu_extras %}
+
+{% block title %}Search{% if query %} — {{ query }}{% endif %} | {{ site.site_name }}{% endblock %}
+{% block robots %}noindex, follow{% endblock %}
+
+{% block content %}
+  {% include "includes/page_hero.html" with hero_title="Search" hero_subtitle="Find courses, schools, notices and events" %}
+
+  <section class="section">
+    <div class="shell">
+
+      <form class="card" action="{% url 'core:search' %}" method="get" role="search">
+        <div class="form-field">
+          <label for="{{ form.q.id_for_label }}">What are you looking for?</label>
+          {{ form.q }}
+          {% for e in form.q.errors %}<span class="field-error">{{ e }}</span>{% endfor %}
+        </div>
+        <button class="btn btn--gold" type="submit">Search</button>
+      </form>
+
+      {% if query %}
+        <p class="section--tight"><strong>{{ total }}</strong> result{{ total|pluralize }} for &ldquo;{{ query }}&rdquo;</p>
+
+        {% if results.courses %}
+          <h2 class="section-title section-title--underline">
+            <span class="h-dark">COURSES</span> <span class="h-accent">({{ results.courses|length }})</span>
+          </h2>
+          <div class="auto-grid">
+            {% for course in results.courses %}
+              <a class="card" href="{{ course.get_absolute_url }}">
+                <strong>{{ course.name }}</strong>
+                <div><small>{{ course.program.name }} &middot; {{ course.school.name }}</small></div>
+              </a>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% if results.schools %}
+          <h2 class="section-title section-title--underline">
+            <span class="h-dark">SCHOOLS</span> <span class="h-accent">({{ results.schools|length }})</span>
+          </h2>
+          <div class="auto-grid">
+            {% for school in results.schools %}
+              <a class="card" href="{{ school.get_absolute_url }}">
+                <strong>{{ school.name }}</strong>
+                <div><small>{{ school.short_description|truncatechars:90 }}</small></div>
+              </a>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% if results.pages %}
+          <h2 class="section-title section-title--underline">
+            <span class="h-dark">PAGES</span> <span class="h-accent">({{ results.pages|length }})</span>
+          </h2>
+          <div class="auto-grid">
+            {% for page in results.pages %}
+              <a class="card" href="{{ page.get_absolute_url }}"><strong>{{ page.title }}</strong></a>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% if results.events %}
+          <h2 class="section-title section-title--underline">
+            <span class="h-dark">EVENTS</span> <span class="h-accent">({{ results.events|length }})</span>
+          </h2>
+          <div class="auto-grid">
+            {% for event in results.events %}
+              <a class="card" href="{{ event.get_absolute_url }}">
+                <strong>{{ event.title|truncatechars:80 }}</strong>
+                <div><small>{{ event.event_date|date:"d M Y" }}</small></div>
+              </a>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% if results.notices %}
+          <h2 class="section-title section-title--underline">
+            <span class="h-dark">NOTICES</span> <span class="h-accent">({{ results.notices|length }})</span>
+          </h2>
+          <div class="auto-grid">
+            {% for notice in results.notices %}
+              <a class="card" href="{{ notice.target_url }}">
+                <strong>{{ notice.title|truncatechars:90 }}</strong>
+                <div><small>{{ notice.notice_date|date:"d M Y" }}</small></div>
+              </a>
+            {% endfor %}
+          </div>
+        {% endif %}
+
+        {% if total == 0 %}
+          <div class="empty-state">
+            <svg aria-hidden="true"><use href="#i-search"></use></svg>
+            <p>No matches for &ldquo;{{ query }}&rdquo;. Try a different word, or
+              <a href="{% url 'academics:course_list' %}">browse all courses</a>.</p>
+          </div>
+        {% endif %}
+      {% endif %}
+
+    </div>
+  </section>
+{% endblock %}

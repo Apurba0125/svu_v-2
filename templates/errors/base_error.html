@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block robots %}noindex, nofollow{% endblock %}
+
+{% block content %}
+  <section class="section">
+    <div class="shell">
+      <div class="card" role="alert">
+        <h1 class="section-title section-title--underline">
+          <span class="h-dark">{% block error_code %}Error{% endblock %}</span>
+          <span class="h-accent">{% block error_title %}{% endblock %}</span>
+        </h1>
+        <p>{% block error_body %}{% endblock %}</p>
+        <p>
+          <a class="btn btn--gold" href="{% url 'core:home' %}">Back to home</a>
+          <a class="btn btn--outline-gold" href="{% url 'core:contact' %}">Contact us</a>
+        </p>
+      </div>
+    </div>
+  </section>
+{% endblock %}

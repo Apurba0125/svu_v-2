@@ -1,0 +1,37 @@
+{% load svu_extras %}
+<div class="topbar">
+  <div class="shell topbar__inner">
+    <ul class="topbar__links">
+      {% for item in top_nav %}
+        <li><a href="{{ item.href }}"{% if item.is_external %} target="_blank" rel="noopener noreferrer"{% endif %}>{{ item.title }}</a></li>
+      {% empty %}
+        <li><a href="{% url 'core:faq' %}">FAQ</a></li>
+        <li><a href="{% url 'core:contact' %}">Help Desk</a></li>
+      {% endfor %}
+    </ul>
+
+    {% if social_links %}
+      <ul class="topbar__social">
+        {% for link in social_links %}
+          <li>
+            <a href="{{ link.url }}" target="_blank" rel="noopener noreferrer"
+               aria-label="{{ site.short_name }} on {{ link.get_platform_display }}">
+              <svg aria-hidden="true" focusable="false"><use href="#i-{{ link.platform }}"></use></svg>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
+
+    <div class="topbar__search">
+      <form class="search-inline" action="{% url 'core:search' %}" method="get" role="search">
+        <label class="sr-only" for="topbar-search">Search this website</label>
+        <input type="search" id="topbar-search" name="q" placeholder="Search..."
+               maxlength="80" required autocomplete="off">
+        <button type="submit" aria-label="Search">
+          <svg aria-hidden="true" focusable="false"><use href="#i-search"></use></svg>
+        </button>
+      </form>
+    </div>
+  </div>
+</div>

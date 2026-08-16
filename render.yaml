@@ -1,0 +1,68 @@
+# ---------------------------------------------------------------------------
+# Render Blueprint — Swami Vivekananda University website
+#
+# In Render: New ▸ Blueprint ▸ connect this repo. Render reads this file and
+# provisions the Postgres database and the web service together, wiring
+# DATABASE_URL automatically.
+# ---------------------------------------------------------------------------
+databases:
+  - name: svu-db
+    databaseName: svu
+    user: svu
+    plan: free          # free Postgres expires after 90 days — upgrade for production
+
+services:
+  - type: web
+    name: svu-website
+    runtime: python
+    plan: free          # free web services sleep after 15 min idle
+    branch: main
+    buildCommand: "bash ./build.sh"
+    startCommand: "gunicorn svu_site.wsgi:application --workers 2 --threads 4 --timeout 60"
+    healthCheckPath: /
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.11.9"
+
+      - key: DJANGO_SETTINGS_MODULE
+        value: svu_site.settings.prod
+
+      # Render prompts for this when you create the Blueprint. Paste the output
+      # of `python manage.py generate_secret_key` (70 chars).
+      # Not auto-generated: Render's generateValue is 44 chars, which trips
+      # Django's own security.W009 "SECRET_KEY has less than 50 characters".
+      - key: DJANGO_SECRET_KEY
+        sync: false
+
+      - key: DJANGO_DEBUG
+        value: "False"
+
+      # Render terminates TLS and forwards X-Forwarded-Proto, so the proxy
+      # header can be trusted and HTTPS redirects/HSTS switched on.
+      - key: DJANGO_BEHIND_PROXY
+        value: "True"
+      - key: DJANGO_SECURE_SSL_REDIRECT
+        value: "True"
+      - key: DJANGO_HSTS_SECONDS
+        value: "31536000"
+
+      # CHANGE THIS to your own unguessable path before going live.
+      - key: DJANGO_ADMIN_URL
+        value: "manage-svu-a91f/"
+
+      # No nginx in front on a single service, so the app serves /media/ itself.
+      - key: DJANGO_SERVE_MEDIA
+        value: "True"
+
+      - key: DATABASE_URL
+        fromDatabase:
+          name: svu-db
+          property: connectionString
+
+      # Console backend by default — swap for real SMTP credentials to receive
+      # enquiry notifications (set these in the dashboard, not in this file).
+      - key: EMAIL_BACKEND
+        value: django.core.mail.backends.console.EmailBackend
+      - key: DEFAULT_FROM_EMAIL
+        value: no-reply@svu.ac.in

@@ -1,0 +1,13 @@
+<div class="float-actions">
+  {% if site.whatsapp_url %}
+    <a class="float-whatsapp" href="{{ site.whatsapp_url }}"
+       target="_blank" rel="noopener noreferrer"
+       aria-label="Chat with {{ site.short_name }} on WhatsApp">
+      <svg aria-hidden="true" focusable="false"><use href="#i-whatsapp"></use></svg>
+    </a>
+  {% endif %}
+
+  <button class="float-top" id="to-top" type="button" aria-label="Back to top">
+    <svg aria-hidden="true" focusable="false"><use href="#i-arrow-up"></use></svg>
+  </button>
+</div>

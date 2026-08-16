@@ -1,0 +1,107 @@
+{% load svu_extras %}
+<footer class="footer">
+  <div class="shell footer__grid">
+
+    <div>
+      <h2 class="footer__title">Office Address</h2>
+      <ul class="footer__contact">
+        <li>
+          <svg aria-hidden="true" focusable="false"><use href="#i-pin"></use></svg>
+          <span>{{ site.address_line1 }},<br>{{ site.address_line2 }}</span>
+        </li>
+        {% for phone in site.phone_list %}
+          <li>
+            <svg aria-hidden="true" focusable="false"><use href="#i-phone"></use></svg>
+            <a href="{{ phone|tel_href }}">{{ phone }}</a>
+          </li>
+        {% endfor %}
+        {% if site.toll_free %}
+          <li>
+            <svg aria-hidden="true" focusable="false"><use href="#i-phone"></use></svg>
+            <span><a href="{{ site.toll_free|tel_href }}">{{ site.toll_free }}</a> (Toll Free)
+              {% if site.toll_free_hours %}<br>{{ site.toll_free_hours }}{% endif %}</span>
+          </li>
+        {% endif %}
+        <li>
+          <svg aria-hidden="true" focusable="false"><use href="#i-mail"></use></svg>
+          <a href="mailto:{{ site.email }}">{{ site.email }}</a>
+        </li>
+        {% if site.website %}
+          <li>
+            <svg aria-hidden="true" focusable="false"><use href="#i-globe"></use></svg>
+            <a href="{{ site.website }}" target="_blank" rel="noopener noreferrer">{{ site.website }}</a>
+          </li>
+        {% endif %}
+      </ul>
+
+      {% if social_links %}
+        <div class="footer__social">
+          {% for link in social_links %}
+            <a href="{{ link.url }}" target="_blank" rel="noopener noreferrer"
+               aria-label="{{ site.short_name }} on {{ link.get_platform_display }}">
+              <svg aria-hidden="true" focusable="false"><use href="#i-{{ link.platform }}"></use></svg>
+            </a>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </div>
+
+    <div>
+      <h2 class="footer__title">Useful Links</h2>
+      <ul class="footer__list">
+        {% for link in footer_links.useful %}
+          <li>
+            <a href="{{ link.url }}"
+               {% if link.open_in_new_tab or link.is_external %}target="_blank" rel="noopener noreferrer"{% endif %}>{{ link.title }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="footer__title">External Links</h2>
+      <ul class="footer__list">
+        {% for link in footer_links.external %}
+          <li>
+            <a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.title }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
+
+    <div>
+      <h2 class="footer__title">Follow Us</h2>
+      {# A real Facebook page plugin would need a third-party iframe + a looser  #}
+      {# CSP, so the footer links out instead of embedding the SDK.             #}
+      <div class="footer__social-embed">
+        <div class="fb-card">
+          <div class="fb-card__name">{{ site.site_name }}</div>
+          <div class="fb-card__meta">Stay updated with campus news, events and admission alerts.</div>
+          {% if site.facebook_page_url %}
+            <a class="btn btn--blue btn--sm" href="{{ site.facebook_page_url }}"
+               target="_blank" rel="noopener noreferrer">Follow on Facebook</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+
+  </div>
+</footer>
+
+<div class="subfooter">
+  <div class="shell subfooter__inner">
+    <span>{{ site.copyright_text }}
+      {% if site.designer_credit %}
+        &nbsp;|&nbsp; Designed by
+        {% if site.designer_url %}
+          <a href="{{ site.designer_url }}" target="_blank" rel="noopener noreferrer">{{ site.designer_credit }}</a>
+        {% else %}{{ site.designer_credit }}{% endif %}
+      {% endif %}
+    </span>
+    <span class="subfooter__links">
+      <a href="{% url 'core:page_detail' 'privacy-policy' %}">Privacy Policy</a>
+      <a href="{% url 'core:faq' %}">FAQ</a>
+      <a href="{% url 'core:contact' %}">Contact</a>
+    </span>
+  </div>
+</div>

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% load svu_extras %}
+
+{% block title %}{{ event.title|truncatechars:70 }} — {{ site.site_name }}{% endblock %}
+{% block og_image %}{% if event.cover_image %}<meta property="og:image" content="{{ request.scheme }}://{{ request.get_host }}{{ event.cover_image.url }}">{% endif %}{% endblock %}
+
+{% block content %}
+  {% include "includes/page_hero.html" with hero_title=event.title hero_subtitle=event.venue %}
+
+  <section class="section">
+    <div class="shell content-grid">
+      <article>
+        {% if event.cover_image %}
+          <img class="card" src="{{ event.cover_image.url }}" alt="{{ event.alt_text }}" width="900" height="600">
+        {% endif %}
+
+        <div class="card prose section--tight">
+          <p><strong>{{ event.event_date|date:"d M Y" }}</strong>{% if event.venue %} &middot; {{ event.venue }}{% endif %}</p>
+          {% if event.description %}
+            {{ event.description|richtext }}
+          {% else %}
+            <p>{{ event.excerpt }}</p>
+          {% endif %}
+        </div>
+
+        {% if event.gallery.all %}
+          <h2 class="section-title section-title--underline">
+            <span class="h-dark">PHOTO</span> <span class="h-accent">GALLERY</span>
+          </h2>
+          <div class="auto-grid">
+            {% for photo in event.gallery.all %}
+              <figure class="card">
+                <img src="{{ photo.image.url }}" alt="{{ photo.caption|default:event.title }}" loading="lazy" width="600" height="400">
+                {% if photo.caption %}<figcaption><small>{{ photo.caption }}</small></figcaption>{% endif %}
+              </figure>
+            {% endfor %}
+          </div>
+        {% endif %}
+      </article>
+
+      <aside>
+        {% if related_events %}
+          <div class="card">
+            <h2 class="section-title section-title--underline"><span class="h-dark">MORE EVENTS</span></h2>
+            <ul class="meta-list" role="list">
+              {% for other in related_events %}
+                <li><a href="{{ other.get_absolute_url }}">{{ other.title|truncatechars:70 }}</a></li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+      </aside>
+    </div>
+  </section>
+{% endblock %}

@@ -1,0 +1,405 @@
+{% extends "base.html" %}
+{% load static svu_extras %}
+
+{% block title %}{{ site.site_name }}{% if site.tagline %} — {{ site.tagline }}{% endif %}{% endblock %}
+
+{% block content %}
+
+{# ======================= 1. Hero carousel ======================= #}
+{% if slides %}
+<section class="hero" id="hero" data-interval="6000" tabindex="-1" aria-roledescription="carousel" aria-label="Highlights">
+  <div class="hero__viewport">
+    <div class="hero__track">
+      {% for slide in slides %}
+        <div class="hero__slide" role="group" aria-roledescription="slide"
+             aria-label="Slide {{ forloop.counter }} of {{ slides|length }}">
+          <img src="{{ slide.image.url }}" alt="{{ slide.alt_text }}"
+               width="1870" height="760"
+               {% if forloop.first %}loading="eager" fetchpriority="high"{% else %}loading="lazy"{% endif %}>
+          {% if slide.title or slide.subtitle %}
+            <div class="hero__caption">
+              {% if slide.title %}<h2>{{ slide.title }}</h2>{% endif %}
+              {% if slide.subtitle %}<p>{{ slide.subtitle }}</p>{% endif %}
+              {% if slide.link_url %}
+                <p><a class="btn btn--gold" href="{{ slide.link_url }}">{{ slide.link_label }}</a></p>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+
+  <button class="hero__arrow hero__arrow--prev" type="button" aria-label="Previous slide">
+    <svg aria-hidden="true" focusable="false"><use href="#i-chevron-left"></use></svg>
+  </button>
+  <button class="hero__arrow hero__arrow--next" type="button" aria-label="Next slide">
+    <svg aria-hidden="true" focusable="false"><use href="#i-chevron-right"></use></svg>
+  </button>
+  <div class="hero__dots dots" role="group" aria-label="Choose a slide"></div>
+</section>
+{% endif %}
+
+
+{# ============ 2. Notice board / Welcome / Enquiry ============ #}
+<section class="home-band">
+  <div class="shell home-band__grid">
+
+    {# ---- Notice board ---- #}
+    <aside class="panel notice-board" aria-labelledby="notice-heading">
+      <h2 class="panel__head" id="notice-heading">Notice Board</h2>
+      <div class="panel__body">
+        <ul class="notice-board__list">
+          {% for notice in notices %}
+            <li class="notice-item {% if notice.is_important %}is-important{% endif %}">
+              <span class="notice-item__date">{{ notice.notice_date|date:"d M Y" }}</span>
+              <a class="notice-item__title" href="{{ notice.target_url }}"
+                 {% if notice.attachment %}target="_blank" rel="noopener noreferrer"{% endif %}>
+                {{ notice.title }}
+                {% if notice.is_important %}<span class="notice-item__flag">New</span>{% endif %}
+              </a>
+            </li>
+          {% empty %}
+            <li class="notice-item"><span class="notice-item__title">No notices at the moment.</span></li>
+          {% endfor %}
+        </ul>
+        <div class="notice-board__more">
+          <a class="btn btn--blue btn--sm" href="{% url 'events:notice_list' %}">More…</a>
+        </div>
+      </div>
+    </aside>
+
+    {# ---- Welcome ---- #}
+    <div class="welcome">
+      <h1 class="welcome__title section-title">{{ site.welcome_heading|split_heading:2 }}</h1>
+      <p class="welcome__text">{{ site.welcome_text }}</p>
+
+      <div class="quicklinks">
+        {% for link in quick_links %}
+          <a class="quicklink" href="{{ link.url|default:'#' }}">
+            <span class="quicklink__badge" aria-hidden="true">
+              <svg focusable="false"><use href="#i-arrow-right"></use></svg>
+            </span>
+            <span>
+              <span class="quicklink__title">{{ link.title }}</span>
+              {% if link.description %}<span class="quicklink__desc">{{ link.description }}</span>{% endif %}
+            </span>
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+
+    {# ---- Enquiry ---- #}
+    <aside class="enquiry-panel" aria-labelledby="enquiry-heading">
+      <div class="panel">
+        <h2 class="panel__head" id="enquiry-heading">Enquiry Form</h2>
+        <div class="panel__body">
+          <div class="enquiry-panel__scroll">
+            {% include "includes/enquiry_form.html" with form=enquiry_form ajax=1 %}
+          </div>
+        </div>
+      </div>
+
+      {% if site.admission_ad_image %}
+        <div class="enquiry-ad">
+          <a href="{{ site.apply_now_url }}">
+            <img src="{{ site.admission_ad_image.url }}"
+                 alt="{{ site.admission_banner_text }} — UG, PG and Ph.D programmes at {{ site.site_name }}"
+                 width="450" height="700" loading="lazy">
+          </a>
+        </div>
+      {% endif %}
+    </aside>
+
+  </div>
+</section>
+
+
+{# ======================= 3. Enlisted ======================= #}
+{% if enlistments %}
+<section class="section section--white" aria-labelledby="enlisted-heading">
+  <div class="shell">
+    <h2 class="section-title section-title--center" id="enlisted-heading">
+      <span class="h-dark">WE ARE NOW</span> <span class="h-accent">ENLISTED</span>
+    </h2>
+    <p class="section-subtitle">{{ site.site_name|upper }} IS PROUDLY FEATURED ON ALL THESE OFFICIAL PLATFORMS</p>
+
+    <div class="enlist-grid">
+      {% for item in enlistments %}
+        <div class="enlist-card">
+          <div class="enlist-card__media">
+            {% if item.url %}<a href="{{ item.url }}" target="_blank" rel="noopener noreferrer">{% endif %}
+              <img src="{{ item.logo.url }}" alt="{{ item.alt_text }}" loading="lazy" width="300" height="200">
+            {% if item.url %}</a>{% endif %}
+          </div>
+          <p class="enlist-card__title">{{ item.title }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+
+{# =================== 4. Explore our offerings =================== #}
+{% if offerings %}
+<section class="offerings" aria-labelledby="offerings-heading">
+  <div class="shell--wide shell offerings__grid">
+    <div class="offerings__media">
+      <img src="{% static 'img/library-shelf.svg' %}" alt="" aria-hidden="true" loading="lazy">
+      <h2 class="offerings__media-title" id="offerings-heading">Explore<br>Our Offerings</h2>
+    </div>
+
+    <div class="offerings__panel">
+      {% for offering in offerings %}
+        <div class="offering">
+          <span class="offering__icon" aria-hidden="true">
+            <svg focusable="false"><use href="#i-{{ offering.icon }}"></use></svg>
+          </span>
+          <span class="offering__num" aria-hidden="true">{{ forloop.counter|stringformat:"02d" }}</span>
+          <h3 class="offering__title">{{ offering.title }}</h3>
+          <p class="offering__text">{{ offering.description }}</p>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endif %}
+
+
+{# ======================= 5. SVU Schools ======================= #}
+{% if schools %}
+<section class="section" aria-labelledby="schools-heading">
+  <div class="shell">
+    <h2 class="section-title section-title--underline" id="schools-heading">
+      <span class="h-dark">SVU</span> <span class="h-accent">SCHOOLS</span>
+    </h2>
+
+    <div class="carousel" data-carousel>
+      <button class="carousel__nav carousel__nav--prev" type="button" aria-label="Previous schools">
+        <svg aria-hidden="true" focusable="false"><use href="#i-chevron-left"></use></svg>
+      </button>
+
+      <div class="carousel__track">
+        {% for school in schools %}
+          <article class="carousel__item">
+            <div class="school-card">
+              <div class="school-card__media">
+                {% if school.card_image %}
+                  <img src="{{ school.card_image.url }}" alt="{{ school.name }}" loading="lazy" width="700" height="394">
+                {% else %}
+                  <img src="{% static 'img/school-placeholder.svg' %}" alt="{{ school.name }}" loading="lazy" width="700" height="394">
+                {% endif %}
+              </div>
+              <div class="school-card__body">
+                <h3 class="school-card__title">{{ school.name }}</h3>
+                {% if school.short_description %}
+                  <p class="school-card__desc">{{ school.short_description|truncatechars:110 }}</p>
+                {% endif %}
+                <div class="school-card__footer">
+                  <a class="btn btn--outline-gold btn--sm" href="{{ school.get_absolute_url }}">View Details</a>
+                </div>
+              </div>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+
+      <button class="carousel__nav carousel__nav--next" type="button" aria-label="Next schools">
+        <svg aria-hidden="true" focusable="false"><use href="#i-chevron-right"></use></svg>
+      </button>
+
+      <div class="carousel__dots dots dots--dark"></div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+
+{# ======================= 6. Videos ======================= #}
+{% if videos %}
+<section class="section section--tight section--white" aria-label="Featured videos">
+  <div class="shell video-grid">
+    {% for video in videos %}
+      <div class="video-card">
+        <h2 class="video-card__title">
+          <span class="h-dark">{{ video.title }}</span>
+          {% if video.highlight %}<span class="h-accent">{{ video.highlight }}</span>{% endif %}
+        </h2>
+        <div class="video-embed">
+          {# Facade: nothing is requested from YouTube until the visitor clicks #}
+          <button class="video-facade" type="button"
+                  data-src="{{ video.embed_url }}"
+                  data-title="{{ video.title }}"
+                  aria-label="Play video: {{ video.title }}">
+            <img src="{{ video.thumbnail_url }}" alt="" loading="lazy" width="480" height="360">
+            <span class="video-facade__play" aria-hidden="true">
+              <svg focusable="false"><use href="#i-play"></use></svg>
+            </span>
+            <span class="video-facade__hint">Click to play — loads YouTube</span>
+          </button>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+
+{# ======================= 7. Latest events ======================= #}
+{% if events %}
+<section class="section" aria-labelledby="events-heading">
+  <div class="shell">
+    <h2 class="section-title section-title--underline" id="events-heading">
+      <span class="h-dark">LATEST</span> <span class="h-accent">EVENTS</span>
+    </h2>
+
+    <div class="carousel carousel--triple" data-carousel>
+      <button class="carousel__nav carousel__nav--prev" type="button" aria-label="Previous events">
+        <svg aria-hidden="true" focusable="false"><use href="#i-chevron-left"></use></svg>
+      </button>
+
+      <div class="carousel__track">
+        {% for event in events %}
+          <article class="carousel__item">
+            <div class="event-card">
+              <div class="event-card__media">
+                {% if event.cover_image %}
+                  <img src="{{ event.cover_image.url }}" alt="{{ event.alt_text }}" loading="lazy" width="600" height="450">
+                {% else %}
+                  <img src="{% static 'img/event-placeholder.svg' %}" alt="{{ event.alt_text }}" loading="lazy" width="600" height="450">
+                {% endif %}
+              </div>
+              <div class="event-card__body">
+                <span class="event-card__date">{{ event.event_date|date:"d M Y" }}</span>
+                <h3 class="event-card__title">{{ event.title|truncatechars:130 }}</h3>
+                <div class="event-card__footer">
+                  <a class="btn btn--outline-gold btn--sm" href="{{ event.get_absolute_url }}">View Details</a>
+                </div>
+              </div>
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+
+      <button class="carousel__nav carousel__nav--next" type="button" aria-label="Next events">
+        <svg aria-hidden="true" focusable="false"><use href="#i-chevron-right"></use></svg>
+      </button>
+
+      <div class="carousel__dots dots dots--dark"></div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+
+{# ================ 8. Chancellor + centres ================ #}
+{% if chancellor or centres %}
+<section class="chancellor-band" aria-labelledby="chancellor-heading">
+  <div class="shell chancellor-grid">
+
+    {% if chancellor %}
+      <div class="chancellor">
+        {% if chancellor.background_image %}
+          <img class="chancellor__bg" src="{{ chancellor.background_image.url }}" alt="" aria-hidden="true" loading="lazy">
+        {% else %}
+          <img class="chancellor__bg" src="{% static 'img/bookshelf.svg' %}" alt="" aria-hidden="true" loading="lazy">
+        {% endif %}
+
+        <div class="chancellor__inner">
+          <h2 class="chancellor__title" id="chancellor-heading">Chancellor's Message</h2>
+          <span class="chancellor__quote-mark" aria-hidden="true">&ldquo;</span>
+          <p class="chancellor__text">{{ chancellor.excerpt }}</p>
+          {% if chancellor.full_message %}
+            <a class="btn btn--gold btn--sm" href="{% url 'core:page_detail' 'chancellors-message' %}">Read More</a>
+          {% endif %}
+
+          <div class="chancellor__divider"></div>
+
+          <div class="chancellor__person">
+            {% if chancellor.photo %}
+              <img class="chancellor__photo" src="{{ chancellor.photo.url }}"
+                   alt="{{ chancellor.name }}" width="82" height="82" loading="lazy">
+            {% endif %}
+            <div>
+              <p class="chancellor__name">{{ chancellor.name }}</p>
+              <div class="chancellor__role">
+                {{ chancellor.designation }}<br>{{ chancellor.institution }}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endif %}
+
+    {% if centres %}
+      <div class="centres">
+        {% for centre in centres %}
+          <div class="centre">
+            <span class="centre__icon" aria-hidden="true">
+              <svg focusable="false"><use href="#i-{{ centre.icon }}"></use></svg>
+            </span>
+            <div>
+              <h3 class="centre__title">
+                {% if centre.url %}<a href="{{ centre.url }}">{{ centre.title }}</a>{% else %}{{ centre.title }}{% endif %}
+              </h3>
+              <p class="centre__text">{{ centre.description }}</p>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+  </div>
+</section>
+{% endif %}
+
+
+{# ======================= 9. Testimonials ======================= #}
+{% if testimonials %}
+<section class="testimonials" aria-labelledby="svuites-heading">
+  <div class="shell">
+    <h2 class="section-title section-title--center" id="svuites-heading">
+      <span class="h-dark">THE</span> <span class="h-accent">SVUites</span>
+    </h2>
+
+    <div class="carousel carousel--double" data-carousel>
+      <button class="carousel__nav carousel__nav--prev" type="button" aria-label="Previous testimonials">
+        <svg aria-hidden="true" focusable="false"><use href="#i-chevron-left"></use></svg>
+      </button>
+
+      <div class="carousel__track">
+        {% for person in testimonials %}
+          <div class="carousel__item">
+            <figure class="testimonial">
+              {% if person.photo %}
+                <img class="testimonial__photo" src="{{ person.photo.url }}"
+                     alt="{{ person.name }}" width="96" height="96" loading="lazy">
+              {% endif %}
+              <blockquote class="testimonial__quote">&lsquo;{{ person.quote }}&rsquo;</blockquote>
+              <figcaption>
+                <p class="testimonial__name">{{ person.name }}</p>
+                <div class="testimonial__meta">{{ person.role }}</div>
+                {% if person.department %}<div class="testimonial__meta">{{ person.department }}</div>{% endif %}
+              </figcaption>
+              {% if person.detail_url %}
+                <div class="testimonial__footer">
+                  <a class="btn btn--gold btn--sm" href="{{ person.detail_url }}">Know More</a>
+                </div>
+              {% endif %}
+            </figure>
+          </div>
+        {% endfor %}
+      </div>
+
+      <button class="carousel__nav carousel__nav--next" type="button" aria-label="Next testimonials">
+        <svg aria-hidden="true" focusable="false"><use href="#i-chevron-right"></use></svg>
+      </button>
+
+      <div class="carousel__dots dots"></div>
+    </div>
+  </div>
+</section>
+{% endif %}
+
+{% endblock %}

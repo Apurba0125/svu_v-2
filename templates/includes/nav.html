@@ -1,0 +1,45 @@
+{% load svu_extras %}
+<div class="nav-scrim" id="nav-scrim" aria-hidden="true"></div>
+
+<nav class="nav" id="site-nav" aria-label="Main navigation">
+  <div class="nav__mobile-head">
+    <strong>Menu</strong>
+    <button class="nav__close" id="nav-close" type="button" aria-label="Close the menu">
+      <svg aria-hidden="true" focusable="false"><use href="#i-close"></use></svg>
+    </button>
+  </div>
+
+  <ul class="nav__list shell">
+    <li class="nav__item">
+      <a class="nav__link {% is_current '/' %}" href="{% url 'core:home' %}" aria-label="Home">
+        <svg aria-hidden="true" focusable="false"><use href="#i-book"></use></svg>
+        <span class="sr-only">Home</span>
+      </a>
+    </li>
+
+    {% for entry in main_nav %}
+      <li class="nav__item{% if entry.children %} nav__item--has-children{% endif %}">
+        <a class="nav__link {% is_current entry.item.href %}"
+           href="{{ entry.item.href }}"
+           {% if entry.item.is_external %}target="_blank" rel="noopener noreferrer"{% endif %}
+           {% if entry.children %}aria-expanded="false" aria-haspopup="true"{% endif %}>
+          {{ entry.item.title }}
+          {% if entry.children %}
+            <svg class="nav__caret" aria-hidden="true" focusable="false"><use href="#i-caret"></use></svg>
+          {% endif %}
+        </a>
+
+        {% if entry.children %}
+          <ul class="nav__submenu">
+            {% for child in entry.children %}
+              <li>
+                <a href="{{ child.href }}"
+                   {% if child.is_external %}target="_blank" rel="noopener noreferrer"{% endif %}>{{ child.title }}</a>
+              </li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+</nav>

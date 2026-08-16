@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 450" role="img" aria-label="Event">
+  <rect width="600" height="450" fill="#d9d4c4"/>
+  <rect x="0" y="330" width="600" height="120" fill="#c8c2ae"/>
+  <circle cx="300" cy="180" r="62" fill="#e9cf52"/>
+  <path d="M270 150h60v60h-60z" fill="#fff" opacity=".55"/>
+  <path d="M285 165h30v30h-30z" fill="#b8942e"/>
+  <text x="300" y="290" font-family="Segoe UI, Arial, sans-serif" font-size="22"
+        font-weight="700" text-anchor="middle" fill="#5b5641">SVU Campus Event</text>
+</svg>

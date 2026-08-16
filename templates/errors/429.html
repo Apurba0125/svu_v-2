@@ -1,0 +1,7 @@
+{% extends "errors/base_error.html" %}
+{% block title %}Too many requests (429) — {{ site.site_name }}{% endblock %}
+{% block error_code %}429{% endblock %}
+{% block error_title %}TOO MANY REQUESTS{% endblock %}
+{% block error_body %}
+  {{ message|default:"You have made too many attempts from this network. Please wait a few minutes and try again." }}
+{% endblock %}
