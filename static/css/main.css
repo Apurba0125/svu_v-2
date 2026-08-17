@@ -387,11 +387,14 @@ table { border-collapse: collapse; width: 100%; }
 }
 .brand-lockup__name {
   font-weight: 800;
-  font-size: .92rem;
+  /* Always one line — the size scales down instead of the words wrapping.
+     nowrap cannot reflow, so the lower bound is set to clear the narrowest
+     phone (320px) with room to spare rather than clipping. */
+  white-space: nowrap;
+  font-size: clamp(.50rem, .25rem + 1.3vw, .92rem);
   color: var(--brand);
   letter-spacing: .3px;
   text-transform: uppercase;
-  max-width: 15ch;
 }
 .brand-lockup small {
   display: block;
@@ -401,6 +404,11 @@ table { border-collapse: collapse; width: 100%; }
   color: var(--muted);
   text-transform: uppercase;
   margin-top: 2px;
+}
+/* On small phones the strapline is longer than the name and would widen the
+   lockup past the screen; the crest plus the name carry the brand there. */
+@media (max-width: 575.98px) {
+  .brand-lockup small { display: none; }
 }
 
 .header__info {
@@ -492,11 +500,8 @@ table { border-collapse: collapse; width: 100%; }
     gap: 10px clamp(10px, 1.2vw, 18px);
   }
 
-  .header__brand { flex-shrink: 1; min-width: 0; }
-  .brand-lockup__name {
-    font-size: clamp(.72rem, .50rem + .32vw, .90rem);
-    max-width: 14ch;
-  }
+  .header__brand { flex-shrink: 0; }
+  .brand-lockup__name { font-size: clamp(.58rem, .30rem + .62vw, .88rem); }
   .brand-lockup small {
     font-size: clamp(.50rem, .38rem + .13vw, .60rem);
     letter-spacing: .3px;
