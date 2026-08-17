@@ -482,6 +482,78 @@ table { border-collapse: collapse; width: 100%; }
 }
 .header__toggle svg { width: 22px; height: 22px; fill: currentColor; }
 
+/* --- Desktop: keep the whole header on ONE row -----------------------------
+   Brand, contact blocks and the call-to-action group must never wrap to a
+   second line. Type and spacing scale with the viewport, and a long address
+   wraps inside its own column rather than stretching the row. */
+@media (min-width: 992px) {
+  .header__inner {
+    flex-wrap: nowrap;
+    gap: 10px clamp(10px, 1.2vw, 18px);
+  }
+
+  .header__brand { flex-shrink: 1; min-width: 0; }
+  .brand-lockup__name {
+    font-size: clamp(.72rem, .50rem + .32vw, .90rem);
+    max-width: 14ch;
+  }
+  .brand-lockup small {
+    font-size: clamp(.50rem, .38rem + .13vw, .60rem);
+    letter-spacing: .3px;
+  }
+
+  .header__info {
+    flex-wrap: nowrap;
+    align-items: flex-start;
+    gap: 0 clamp(10px, 1.1vw, 20px);
+    min-width: 0;
+  }
+  .info-block {
+    font-size: clamp(.64rem, .50rem + .18vw, .76rem);
+    line-height: 1.45;
+    min-width: 0;
+  }
+  .info-block__label {
+    font-size: clamp(.56rem, .46rem + .13vw, .68rem);
+    padding: 2px 7px;
+    margin-bottom: 3px;
+    white-space: nowrap;
+  }
+  /* Wraps a long street address instead of forcing the row wider */
+  .info-block__body { max-width: clamp(150px, 17vw, 250px); }
+  .info-block__body a { white-space: nowrap; }
+
+  .header__cta {
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 0 clamp(8px, .9vw, 16px);
+    flex: 0 0 auto;
+  }
+  .cta-pill {
+    padding: 4px clamp(8px, .8vw, 14px);
+    font-size: clamp(.60rem, .48rem + .14vw, .74rem);
+    white-space: nowrap;
+  }
+  .cta-stack__title { font-size: clamp(.64rem, .52rem + .14vw, .78rem); }
+  .cta-stack__sub   { font-size: clamp(.52rem, .44rem + .10vw, .66rem); }
+  .cta-apply__label {
+    font-size: clamp(.58rem, .48rem + .12vw, .72rem);
+    margin-bottom: 2px;
+    white-space: nowrap;
+  }
+  .cta-apply .btn {
+    padding: 5px clamp(8px, .8vw, 14px);
+    font-size: clamp(.58rem, .48rem + .12vw, .70rem);
+    min-height: 30px;
+    white-space: nowrap;
+  }
+}
+
+/* Under 1200px the brand strapline is dropped to buy back horizontal room. */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  .brand-lockup small { display: none; }
+}
+
 /* --------------------------------------------------------------------------
    7. Marquee strip
    -------------------------------------------------------------------------- */
